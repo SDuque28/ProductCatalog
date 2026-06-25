@@ -2,8 +2,9 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ErrorMessageComponent } from '../../../../shared/components/error-message/error-message.component';
-import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
+import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
+import { ErrorStateComponent } from '../../../../shared/components/error-state/error-state.component';
+import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
 import { Product } from '../../models/product.model';
 import { ProductListFacade } from '../../services/product-list.facade';
 
@@ -14,8 +15,9 @@ import { ProductListFacade } from '../../services/product-list.facade';
     CommonModule,
     ReactiveFormsModule,
     CurrencyPipe,
-    LoadingComponent,
-    ErrorMessageComponent
+    LoadingSpinnerComponent,
+    ErrorStateComponent,
+    EmptyStateComponent
   ],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.scss',

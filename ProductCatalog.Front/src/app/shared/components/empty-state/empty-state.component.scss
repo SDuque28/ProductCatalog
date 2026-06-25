@@ -1,0 +1,23 @@
+.empty-state {
+  display: grid;
+  gap: 0.75rem;
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-color);
+  box-shadow: 0 1.25rem 2.5rem var(--shadow-color);
+  text-align: center;
+}
+
+.empty-state__title,
+.empty-state__message {
+  margin: 0;
+}
+
+.empty-state__title {
+  color: var(--text-color);
+}
+
+.empty-state__message {
+  color: var(--muted-text-color);
+}

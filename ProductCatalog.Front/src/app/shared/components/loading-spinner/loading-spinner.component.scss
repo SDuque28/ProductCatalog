@@ -1,0 +1,32 @@
+.loading-spinner {
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-color);
+  box-shadow: 0 1.25rem 2.5rem var(--shadow-color);
+  text-align: center;
+}
+
+.loading-spinner__icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0.25rem solid rgba(31, 79, 115, 0.15);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: loading-spinner-rotate 0.9s linear infinite;
+}
+
+.loading-spinner__message {
+  margin: 0;
+  color: var(--muted-text-color);
+  font-weight: 600;
+}
+
+@keyframes loading-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

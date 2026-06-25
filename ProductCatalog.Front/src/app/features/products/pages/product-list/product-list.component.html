@@ -21,11 +21,17 @@
   </form>
 
   @if (facade.loading()) {
-    <app-loading message="Loading products..." />
+    <app-loading-spinner message="Loading products..." />
   } @else if (facade.error(); as errorMessage) {
-    <app-error-message [message]="errorMessage" />
+    <app-error-state
+      title="Something went wrong"
+      [message]="errorMessage"
+    />
   } @else if (!facade.hasProducts()) {
-    <div class="product-list__empty">No products found.</div>
+    <app-empty-state
+      title="No products found"
+      message="Try changing the search filters."
+    />
   } @else {
     <div class="product-list__table-wrapper">
       <table class="product-list__table">

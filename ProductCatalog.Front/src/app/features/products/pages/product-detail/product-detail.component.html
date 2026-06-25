@@ -9,16 +9,21 @@
   </header>
 
   @if (facade.loading()) {
-    <app-loading message="Loading product..." />
+    <app-loading-spinner message="Loading product information..." />
   } @else if (facade.notFound()) {
     <section class="product-detail__state-card">
-      <h2>Product not found.</h2>
-      <p>The requested product could not be located.</p>
+      <app-error-state
+        title="Product not found"
+        message="The requested product could not be located."
+      />
       <a class="product-detail__back-button" routerLink="/products">Back to Products</a>
     </section>
   } @else if (facade.error(); as errorMessage) {
     <section class="product-detail__state-card">
-      <app-error-message [message]="errorMessage" />
+      <app-error-state
+        title="Something went wrong"
+        [message]="errorMessage"
+      />
       <div class="product-detail__actions">
         <button class="product-detail__retry-button" type="button" (click)="retry()">Retry</button>
         <a class="product-detail__back-button" routerLink="/products">Back to Products</a>

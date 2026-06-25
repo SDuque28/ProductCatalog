@@ -1,3 +1,57 @@
-<section class="feature-card">
-  <h1>Product Detail Works!</h1>
+<section class="product-detail">
+  <header class="product-detail__header">
+    <div>
+      <p class="product-detail__eyebrow">Catalog</p>
+      <h1>Product Details</h1>
+    </div>
+
+    <a class="product-detail__back-button" routerLink="/products">Back to Products</a>
+  </header>
+
+  @if (facade.loading()) {
+    <app-loading message="Loading product..." />
+  } @else if (facade.notFound()) {
+    <section class="product-detail__state-card">
+      <h2>Product not found.</h2>
+      <p>The requested product could not be located.</p>
+      <a class="product-detail__back-button" routerLink="/products">Back to Products</a>
+    </section>
+  } @else if (facade.error(); as errorMessage) {
+    <section class="product-detail__state-card">
+      <app-error-message [message]="errorMessage" />
+      <div class="product-detail__actions">
+        <button class="product-detail__retry-button" type="button" (click)="retry()">Retry</button>
+        <a class="product-detail__back-button" routerLink="/products">Back to Products</a>
+      </div>
+    </section>
+  } @else if (facade.product(); as product) {
+    <article class="product-detail__card">
+      <dl class="product-detail__grid">
+        <div class="product-detail__row">
+          <dt>Product ID</dt>
+          <dd>{{ product.idProducto }}</dd>
+        </div>
+
+        <div class="product-detail__row">
+          <dt>Name</dt>
+          <dd>{{ product.nombreProducto }}</dd>
+        </div>
+
+        <div class="product-detail__row">
+          <dt>Description</dt>
+          <dd>{{ product.descripcion }}</dd>
+        </div>
+
+        <div class="product-detail__row">
+          <dt>Price</dt>
+          <dd>{{ product.valor | currency: 'COP' : 'symbol' : '1.0-0' }}</dd>
+        </div>
+
+        <div class="product-detail__row">
+          <dt>Stock</dt>
+          <dd>{{ product.stock }} units</dd>
+        </div>
+      </dl>
+    </article>
+  }
 </section>

@@ -46,9 +46,13 @@
               <td>{{ product.valor | currency: 'COP' : 'symbol' : '1.0-0' }}</td>
               <td>{{ product.stock }}</td>
               <td>
-                <a class="product-list__detail-button" [routerLink]="['/products', product.idProducto]">
+                <button
+                  class="product-list__detail-button"
+                  type="button"
+                  (click)="viewProductDetail(product)"
+                >
                   View Detail
-                </a>
+                </button>
               </td>
             </tr>
           }

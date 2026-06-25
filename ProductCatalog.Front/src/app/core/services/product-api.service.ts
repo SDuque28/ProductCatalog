@@ -32,4 +32,8 @@ export class ProductApiService {
 
     return this.httpClient.get<PagedResponse<Product>>(this.productsUrl, { params });
   }
+
+  public getProductById(id: number): Observable<Product> {
+    return this.httpClient.get<Product>(`${this.productsUrl}/${id}`);
+  }
 }

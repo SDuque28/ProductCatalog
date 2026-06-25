@@ -1,7 +1,7 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ErrorMessageComponent } from '../../../../shared/components/error-message/error-message.component';
 import { LoadingComponent } from '../../../../shared/components/loading/loading.component';
 import { Product } from '../../models/product.model';
@@ -13,7 +13,6 @@ import { ProductListFacade } from '../../services/product-list.facade';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink,
     CurrencyPipe,
     LoadingComponent,
     ErrorMessageComponent
@@ -24,6 +23,7 @@ import { ProductListFacade } from '../../services/product-list.facade';
 })
 export class ProductListComponent implements OnInit {
   public readonly facade = inject(ProductListFacade);
+  private readonly router = inject(Router);
   public readonly filtersForm = new FormGroup({
     nombre: new FormControl('', { nonNullable: true }),
     conStock: new FormControl(false, { nonNullable: true })
@@ -45,6 +45,10 @@ export class ProductListComponent implements OnInit {
 
   public onNextPage(): void {
     this.facade.goToNextPage();
+  }
+
+  public viewProductDetail(product: Product): void {
+    void this.router.navigate(['/products', product.idProducto]);
   }
 
   public trackByProductId(_index: number, product: Product): number {

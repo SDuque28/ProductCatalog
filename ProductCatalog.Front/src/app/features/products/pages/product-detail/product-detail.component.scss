@@ -1,11 +1,113 @@
-.feature-card {
-  padding: 2rem;
+.product-detail {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.product-detail__header,
+.product-detail__card,
+.product-detail__state-card {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   background-color: var(--surface-color);
   box-shadow: 0 1.25rem 2.5rem var(--shadow-color);
 }
 
-.feature-card h1 {
+.product-detail__header,
+.product-detail__state-card,
+.product-detail__card {
+  padding: 2rem;
+}
+
+.product-detail__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.product-detail__eyebrow {
+  margin: 0 0 0.5rem;
+  color: var(--secondary-color);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.product-detail__header h1,
+.product-detail__state-card h2 {
   margin: 0;
+}
+
+.product-detail__state-card p {
+  margin: 0.75rem 0 0;
+  color: var(--muted-text-color);
+}
+
+.product-detail__grid {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+}
+
+.product-detail__row {
+  display: grid;
+  gap: 0.35rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(215, 222, 234, 0.75);
+}
+
+.product-detail__row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.product-detail__row dt {
+  color: var(--muted-text-color);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.product-detail__row dd {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.product-detail__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.product-detail__back-button,
+.product-detail__retry-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  padding: 0 1.15rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.product-detail__back-button {
+  background-color: rgba(31, 79, 115, 0.08);
+  color: var(--primary-color);
+}
+
+.product-detail__retry-button {
+  border: 0;
+  background-color: var(--primary-color);
+  color: #fff;
+  cursor: pointer;
+}
+
+@media (max-width: 767px) {
+  .product-detail__header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }

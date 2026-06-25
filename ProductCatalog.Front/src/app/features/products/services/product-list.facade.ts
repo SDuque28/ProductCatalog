@@ -41,10 +41,10 @@ export class ProductListFacade {
         switchMap(() =>
           this.productApiService
             .getProducts(
-              this.getNombreFilter(),
-              this.getStockFilter(),
               this.currentPage(),
-              this.pageSize()
+              this.pageSize(),
+              this.getNombreFilter(),
+              this.getStockFilter()
             )
             .pipe(
               tap((response) => {

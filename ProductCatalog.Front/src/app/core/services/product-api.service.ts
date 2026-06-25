@@ -13,10 +13,10 @@ export class ProductApiService {
   private readonly productsUrl = `${API_BASE_URL}/products`;
 
   public getProducts(
-    nombre?: string,
-    conStock?: boolean,
     page: number = 1,
-    pageSize: number = 10
+    pageSize: number = 10,
+    nombre?: string,
+    conStock?: boolean
   ): Observable<PagedResponse<Product>> {
     let params = new HttpParams()
       .set('page', page)

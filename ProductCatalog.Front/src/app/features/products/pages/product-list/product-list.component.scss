@@ -1,0 +1,11 @@
+.feature-card {
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background-color: var(--surface-color);
+  box-shadow: 0 1.25rem 2.5rem var(--shadow-color);
+}
+
+.feature-card h1 {
+  margin: 0;
+}

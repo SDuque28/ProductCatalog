@@ -1,0 +1,11 @@
+IdProducto|NombreProducto|Descripcion|Valor|Stock
+1|Teclado mecanico|Teclado RGB switch azul|150000|12
+2|Mouse inalambrico|Mouse ergonomico 2.4GHz|85000|0
+3|Monitor 24|Monitor IPS Full HD|620000|4
+4|Audifonos|Audifonos over-ear con microfono|210000|7
+5||Producto sin nombre|120000|5
+abc|Producto invalido|Id invalido|50000|3
+6|Producto sin stock|Stock invalido|75000|abc
+7|Producto valor invalido|Valor invalido|abc|2
+8|Producto duplicado|Primer registro valido|99000|1
+8|Producto duplicado 2|Debe ignorarse|120000|2

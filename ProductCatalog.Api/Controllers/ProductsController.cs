@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using ProductCatalog.Api.DTOs;
+using ProductCatalog.Api.Exceptions;
 using ProductCatalog.Api.Interfaces;
 
 namespace ProductCatalog.Api.Controllers;
@@ -27,11 +28,7 @@ public class ProductsController : ControllerBase
     public async Task<ActionResult<PagedResponseDto<ProductListItemDto>>> GetProductsAsync(
         [FromQuery] ProductQueryParameters parameters)
     {
-        var validationError = ValidatePagination(parameters);
-        if (validationError is not null)
-        {
-            return BadRequest(CreateErrorResponse(validationError));
-        }
+        ValidatePagination(parameters);
 
         var queryParameters = new ProductQueryParametersDto
         {
@@ -60,7 +57,7 @@ public class ProductsController : ControllerBase
         var product = await _productService.GetProductByIdAsync(id);
         if (product is null)
         {
-            return NotFound(CreateErrorResponse($"The product with Id {id} does not exist."));
+            throw new NotFoundException($"The product with Id {id} does not exist.");
         }
 
         return Ok(product);
@@ -80,26 +77,16 @@ public class ProductsController : ControllerBase
         return Ok(products);
     }
 
-    private static string? ValidatePagination(ProductQueryParameters parameters)
+    private static void ValidatePagination(ProductQueryParameters parameters)
     {
         if (parameters.Page < 1)
         {
-            return "The page query parameter must be greater than or equal to 1.";
+            throw new BadRequestException("The page query parameter must be greater than or equal to 1.");
         }
 
         if (parameters.PageSize < 1 || parameters.PageSize > 100)
         {
-            return "The pageSize query parameter must be between 1 and 100.";
+            throw new BadRequestException("The pageSize query parameter must be between 1 and 100.");
         }
-
-        return null;
-    }
-
-    private static ErrorResponseDto CreateErrorResponse(string message)
-    {
-        return new ErrorResponseDto
-        {
-            Message = message
-        };
     }
 }

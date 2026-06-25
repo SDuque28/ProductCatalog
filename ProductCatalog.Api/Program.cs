@@ -1,4 +1,5 @@
 using ProductCatalog.Api.Interfaces;
+using ProductCatalog.Api.Middleware;
 using ProductCatalog.Api.Repositories;
 using ProductCatalog.Api.Services;
 
@@ -16,6 +17,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.MapControllers();
 

@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace ProductCatalog.Api.DTOs;
 
 public class PagedResponseDto<T>
@@ -8,7 +10,11 @@ public class PagedResponseDto<T>
 
     public int PageSize { get; set; }
 
+    public int Total => TotalItems;
+
+    [JsonIgnore]
     public int TotalItems { get; set; }
 
+    [JsonIgnore]
     public int TotalPages { get; set; }
 }

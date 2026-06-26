@@ -1,0 +1,94 @@
+<section class="register">
+  <div class="register__card surface-card">
+    <header class="register__header">
+      <p class="page-eyebrow">Account registration</p>
+      <h1 class="page-title">Product Catalog</h1>
+      <p class="page-subtitle">
+        Create an account to sign in and access the protected product catalog.
+      </p>
+    </header>
+
+    @if (successMessage(); as successMessage) {
+      <div class="register__notice register__notice--success" role="status">
+        {{ successMessage }}
+      </div>
+    }
+
+    @if (errorMessage(); as errorMessage) {
+      <app-error-message [message]="errorMessage" />
+    }
+
+    <form class="register__form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <label class="register__field">
+        <span class="register__field-label">Username</span>
+        <input
+          type="text"
+          formControlName="username"
+          placeholder="Choose a username"
+          autocomplete="username"
+          [class.register__input--invalid]="hasControlError('username')"
+        />
+        @if (hasControlError('username')) {
+          <span class="register__field-error">Username is required.</span>
+        }
+      </label>
+
+      <label class="register__field">
+        <span class="register__field-label">Email</span>
+        <input
+          type="email"
+          formControlName="email"
+          placeholder="Enter your email address"
+          autocomplete="email"
+          [class.register__input--invalid]="hasControlError('email')"
+        />
+        @if (hasControlError('email')) {
+          <span class="register__field-error">
+            {{ registerForm.controls.email.hasError('required') ? 'Email is required.' : 'Enter a valid email address.' }}
+          </span>
+        }
+      </label>
+
+      <label class="register__field">
+        <span class="register__field-label">Password</span>
+        <input
+          type="password"
+          formControlName="password"
+          placeholder="Create a password"
+          autocomplete="new-password"
+          [class.register__input--invalid]="hasControlError('password')"
+        />
+        @if (hasControlError('password')) {
+          <span class="register__field-error">
+            {{ registerForm.controls.password.hasError('required') ? 'Password is required.' : 'Password must be at least 8 characters long.' }}
+          </span>
+        }
+      </label>
+
+      <label class="register__field">
+        <span class="register__field-label">Confirm password</span>
+        <input
+          type="password"
+          formControlName="confirmPassword"
+          placeholder="Confirm your password"
+          autocomplete="new-password"
+          [class.register__input--invalid]="hasControlError('confirmPassword') || hasPasswordMismatch()"
+        />
+        @if (hasControlError('confirmPassword')) {
+          <span class="register__field-error">Confirm password is required.</span>
+        } @else if (hasPasswordMismatch()) {
+          <span class="register__field-error">Password and confirm password must match.</span>
+        }
+      </label>
+
+      <button class="button-primary register__submit" type="submit" [disabled]="isSubmitting()">
+        {{ isSubmitting() ? 'Creating account...' : 'Create account' }}
+      </button>
+    </form>
+
+    <div class="register__footer">
+      <span class="register__footer-copy">Already have an account?</span>
+      <a class="register__footer-link" routerLink="/login">Sign in</a>
+    </div>
+  </div>
+</section>

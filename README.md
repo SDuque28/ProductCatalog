@@ -23,6 +23,7 @@ The solution was organized with a layered architecture and clean separation of r
 - Frontend unit tests
 - Responsive Angular UI with loading, error, empty, and success states
 - Frontend login flow with JWT persistence and protected routes
+- Frontend registration flow for new users
 
 ---
 
@@ -229,6 +230,7 @@ The frontend is an Angular standalone application organized by `core`, `shared`,
 Main screens currently implemented:
 
 - Login
+- Register
 - Product List
 - Product Detail
 - Page Not Found
@@ -236,6 +238,7 @@ Main screens currently implemented:
 Frontend routing:
 
 - `/login`
+- `/register`
 - `/products`
 - `/products/:id`
 - `/**` for 404 handling
@@ -245,6 +248,7 @@ The Product List page uses server-side search, stock filtering, and pagination. 
 ### Frontend authentication
 
 - Login route: `/login`
+- Register route: `/register`
 - Demo credentials:
   Username: `admin`
   Password: `Admin123*`
@@ -260,6 +264,11 @@ The Product List page uses server-side search, stock filtering, and pagination. 
 - Session behavior:
   refreshing the page keeps the session active while the stored token is still valid
   a `401 Unauthorized` response clears the token and returns the user to `/login`
+- Manual flow:
+  1. Register a user from `/register`
+  2. Sign in from `/login` with the new credentials
+  3. Access `/products` and `/products/:id`
+  4. Logout from the header to clear the session
 
 ---
 

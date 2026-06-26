@@ -1,12 +1,12 @@
-.login {
+.register {
   min-height: calc(100dvh - 220px);
   display: grid;
   place-items: center;
   padding: 12px 0;
 }
 
-.login__card {
-  width: min(100%, 420px);
+.register__card {
+  width: min(100%, 460px);
   display: grid;
   gap: 20px;
   padding: 28px 24px;
@@ -14,41 +14,41 @@
   box-shadow: var(--shadow-md);
 }
 
-.login__header {
+.register__header {
   display: grid;
   gap: 4px;
 }
 
-.login__notice {
+.register__notice {
   padding: 12px 14px;
   border: 1px solid transparent;
   border-radius: var(--radius);
   font-size: 14px;
 }
 
-.login__notice--info {
-  border-color: rgba(37, 99, 235, 0.16);
-  background: rgba(37, 99, 235, 0.06);
-  color: #1d4ed8;
+.register__notice--success {
+  border-color: rgba(5, 150, 105, 0.16);
+  background: rgba(5, 150, 105, 0.08);
+  color: #047857;
 }
 
-.login__form {
+.register__form {
   display: grid;
   gap: 16px;
 }
 
-.login__field {
+.register__field {
   display: grid;
   gap: 8px;
 }
 
-.login__field-label {
+.register__field-label {
   color: var(--foreground);
   font-size: 14px;
   font-weight: 500;
 }
 
-.login__field input {
+.register__field input {
   min-height: 42px;
   padding: 0 12px;
   border: 1px solid var(--border);
@@ -61,27 +61,27 @@
     box-shadow 0.2s ease;
 }
 
-.login__field input:focus {
+.register__field input:focus {
   outline: none;
   border-color: rgba(37, 99, 235, 0.5);
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.08);
 }
 
-.login__input--invalid {
+.register__input--invalid {
   border-color: rgba(165, 36, 36, 0.4) !important;
 }
 
-.login__field-error {
+.register__field-error {
   color: #8b1e1e;
   font-size: 13px;
 }
 
-.login__submit {
+.register__submit {
   width: 100%;
   min-height: 42px;
 }
 
-.login__footer {
+.register__footer {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -91,22 +91,22 @@
   font-size: 14px;
 }
 
-.login__footer-link {
+.register__footer-link {
   color: var(--primary);
   font-weight: 500;
 }
 
-.login__footer-link:hover {
+.register__footer-link:hover {
   color: var(--primary-dark);
 }
 
 @media (max-width: 767px) {
-  .login {
+  .register {
     min-height: auto;
     align-items: start;
   }
 
-  .login__card {
+  .register__card {
     padding: 24px 18px;
   }
 }

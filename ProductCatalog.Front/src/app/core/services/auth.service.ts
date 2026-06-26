@@ -3,8 +3,8 @@ import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Observable, tap } from 'rxjs';
 import { API_BASE_URL } from '../constants/api.constants';
-import { AUTH_LOGIN_URL_SUFFIX } from '../constants/auth.constants';
-import { AuthState, LoginRequest, LoginResponse } from '../models';
+import { AUTH_LOGIN_URL_SUFFIX, AUTH_REGISTER_URL_SUFFIX } from '../constants/auth.constants';
+import { AuthState, LoginRequest, LoginResponse, RegisterRequest, RegisterResponse } from '../models';
 import {
   clearStoredAuthSession,
   getStoredToken,
@@ -18,7 +18,8 @@ import {
 export class AuthService {
   private readonly httpClient = inject(HttpClient);
   private readonly platformId = inject(PLATFORM_ID);
-  private readonly loginUrl = `${API_BASE_URL}${AUTH_LOGIN_URL_SUFFIX}`;
+  private readonly loginUrl = this.buildAuthUrl(AUTH_LOGIN_URL_SUFFIX);
+  private readonly registerUrl = this.buildAuthUrl(AUTH_REGISTER_URL_SUFFIX);
 
   public login(username: string, password: string): Observable<LoginResponse> {
     const request: LoginRequest = {
@@ -31,6 +32,17 @@ export class AuthService {
         storeAuthSession(this.getStorage(), response);
       })
     );
+  }
+
+  public register(payload: RegisterRequest): Observable<RegisterResponse> {
+    const request: RegisterRequest = {
+      username: payload.username.trim(),
+      email: payload.email.trim(),
+      password: payload.password,
+      confirmPassword: payload.confirmPassword
+    };
+
+    return this.httpClient.post<RegisterResponse>(this.registerUrl, request);
   }
 
   public logout(): void {
@@ -47,6 +59,10 @@ export class AuthService {
 
   public getAuthState(): AuthState {
     return readStoredAuthState(this.getStorage());
+  }
+
+  private buildAuthUrl(path: string): string {
+    return `${API_BASE_URL}${path}`;
   }
 
   private getStorage(): Storage | null {

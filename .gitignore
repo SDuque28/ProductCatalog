@@ -36,6 +36,9 @@ tmp/
 .env.*
 !.env.example
 
+# Backend user storage
+ProductCatalog.Api/Data/users.txt
+
 # OS files
 Thumbs.db
 .DS_Store

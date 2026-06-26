@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductCatalog.Api.DTOs;
 using ProductCatalog.Api.Exceptions;
@@ -6,6 +7,7 @@ using ProductCatalog.Api.Interfaces;
 namespace ProductCatalog.Api.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class ProductsController : ControllerBase
 {

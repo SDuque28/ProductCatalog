@@ -14,12 +14,16 @@ The solution was organized with a layered architecture and clean separation of r
 - Stock filtering
 - Server-side pagination
 - Low-stock endpoint
+- JWT authentication for protected backend endpoints
+- User registration with TXT-based persistence
 - Global exception handling
 - TXT-based product data source
 - Malformed TXT row handling
 - Unit and integration tests for the backend
 - Frontend unit tests
 - Responsive Angular UI with loading, error, empty, and success states
+- Frontend login flow with JWT persistence and protected routes
+- Frontend registration flow for new users
 
 ---
 
@@ -101,6 +105,7 @@ ProductCatalog/
 - Repository Pattern
 - Service Layer
 - OpenAPI document generation in development
+- Swagger UI with Bearer token support
 - xUnit
 - Moq
 - FluentAssertions
@@ -109,9 +114,79 @@ ProductCatalog/
 
 | Method | Endpoint | Description |
 |---------|----------|-------------|
+| `POST` | `/api/auth/register` | Register a new user in the TXT-based user store |
+| `POST` | `/api/auth/login` | Authenticate a registered user and obtain a JWT token |
 | `GET` | `/api/products` | Retrieve a paginated product list with optional filters |
 | `GET` | `/api/products/{id}` | Retrieve a single product by identifier |
 | `GET` | `/api/products/low-stock` | Retrieve products with stock less than or equal to a threshold |
+
+Authentication implemented: `Yes`
+
+Protected endpoints:
+
+- `GET /api/products`
+- `GET /api/products/{id}`
+- `GET /api/products/low-stock`
+
+Public endpoint:
+
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+
+Registration request example:
+
+```json
+{
+  "username": "pablo",
+  "email": "pablo@example.com",
+  "password": "Password123*",
+  "confirmPassword": "Password123*"
+}
+```
+
+Successful registration response example:
+
+```json
+{
+  "username": "pablo",
+  "email": "pablo@example.com",
+  "createdAtUtc": "2026-01-01T12:00:00Z",
+  "message": "User registered successfully."
+}
+```
+
+Login request example:
+
+```json
+{
+  "username": "admin",
+  "password": "Admin123*"
+}
+```
+
+Successful login response example:
+
+```json
+{
+  "token": "<JWT_TOKEN>",
+  "expiresAt": "2026-01-01T12:00:00Z",
+  "tokenType": "Bearer"
+}
+```
+
+Demo credentials:
+
+- Username: `admin`
+- Email: `admin@example.com`
+- Password: `Admin123*`
+
+The technical assessment seeds the demo admin user into `ProductCatalog.Api/Data/users.txt` when the file is missing or empty so the existing login flow keeps working.
+
+To call protected endpoints, include the JWT in the `Authorization` header:
+
+```http
+Authorization: Bearer <TOKEN>
+```
 
 Supported query parameters for `GET /api/products`:
 
@@ -139,7 +214,6 @@ Not implemented:
 - Product creation
 - Product update
 - Product deletion
-- Authentication and authorization
 - Database persistence
 
 ---
@@ -155,17 +229,46 @@ The frontend is an Angular standalone application organized by `core`, `shared`,
 
 Main screens currently implemented:
 
+- Login
+- Register
 - Product List
 - Product Detail
 - Page Not Found
 
 Frontend routing:
 
+- `/login`
+- `/register`
 - `/products`
 - `/products/:id`
 - `/**` for 404 handling
 
 The Product List page uses server-side search, stock filtering, and pagination. The Product Detail page loads a single product by route parameter and handles loading, error, and not-found states.
+
+### Frontend authentication
+
+- Login route: `/login`
+- Register route: `/register`
+- Demo credentials:
+  Username: `admin`
+  Password: `Admin123*`
+- Protected routes:
+  `/products`
+  `/products/:id`
+- Token storage:
+  `product_catalog_token`
+  `product_catalog_token_expires_at`
+  `product_catalog_token_type`
+- Logout behavior:
+  the header logout action clears the stored token and redirects back to `/login`
+- Session behavior:
+  refreshing the page keeps the session active while the stored token is still valid
+  a `401 Unauthorized` response clears the token and returns the user to `/login`
+- Manual flow:
+  1. Register a user from `/register`
+  2. Sign in from `/login` with the new credentials
+  3. Access `/products` and `/products/:id`
+  4. Logout from the header to clear the session
 
 ---
 
@@ -197,6 +300,27 @@ Malformed record handling in the TXT repository:
 - Duplicate `IdProducto` values keep the first valid row and ignore later duplicates.
 - Repository methods do not throw for malformed rows; exceptions are only expected when the file itself cannot be accessed.
 
+## User Data Source
+
+Registered users are stored in `ProductCatalog.Api/Data/users.txt`.
+
+- The file is created automatically on startup or during auth operations if it does not already exist.
+- The file is ignored by Git through `.gitignore`.
+- Passwords are stored as SHA256 hashes, not in plain text.
+- This hashing approach is acceptable for a technical assessment only. In production, stronger password hashing such as BCrypt, PBKDF2, or Argon2 should be used.
+
+`users.txt` format:
+
+```text
+username|email|passwordHash|createdAtUtc
+```
+
+Example:
+
+```text
+admin|admin@example.com|<sha256_hash>|2026-01-01T12:00:00Z
+```
+
 ---
 
 ## Error Handling
@@ -206,14 +330,18 @@ The API uses a global exception middleware to centralize unhandled exception pro
 Current mappings:
 
 - `200 OK`
+- `201 Created`
 - `400 Bad Request`
 - `401 Unauthorized`
+- `403 Forbidden`
+- `409 Conflict`
 - `404 Not Found`
 - `500 Internal Server Error`
 
 Custom exceptions currently implemented:
 
 - `BadRequestException`
+- `ConflictException`
 - `NotFoundException`
 
 In production-style responses, internal exception details are not exposed to the client.
@@ -236,7 +364,35 @@ Default backend URLs:
 - `http://localhost:5000`
 - `https://localhost:7105`
 
-OpenAPI is available in development.
+Swagger UI is available in development at:
+
+- `https://localhost:7105/swagger`
+- `http://localhost:5000/swagger`
+
+JWT configuration and the demo user are stored in `ProductCatalog.Api/appsettings.json` for assessment purposes. In production, secrets must be stored securely through environment variables or a secret manager.
+
+Example registration request:
+
+```bash
+curl -X POST https://localhost:7105/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d "{\"username\":\"pablo\",\"email\":\"pablo@example.com\",\"password\":\"Password123*\",\"confirmPassword\":\"Password123*\"}"
+```
+
+Example login request:
+
+```bash
+curl -X POST https://localhost:7105/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d "{\"username\":\"admin\",\"password\":\"Admin123*\"}"
+```
+
+Example protected request:
+
+```bash
+curl https://localhost:7105/api/products \
+  -H "Authorization: Bearer <TOKEN>"
+```
 
 ### Frontend
 
@@ -311,11 +467,16 @@ npm test -- --watch=false
 - Decision: Keep API access in core services and manage feature state with product facades.
 - Benefit: Components stay smaller, state transitions are easier to test, and server-driven behavior remains reusable.
 
+### 6. TXT-Based User Registration
+
+- Problem: The assessment required registration and login persistence without introducing a database.
+- Decision: Store users in `Data/users.txt` behind `IUserRepository`, and hash passwords with a reusable SHA256 hasher.
+- Benefit: Authentication stays simple, testable, and aligned with the layered backend structure while keeping real user data out of Git.
+
 ---
 
 ## Future Improvements
 
-- JWT authentication and authorization
 - Database persistence with a replaceable repository implementation
 - CRUD endpoints for products
 - Docker support

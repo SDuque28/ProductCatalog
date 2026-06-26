@@ -1,0 +1,41 @@
+# Build outputs
+bin/
+obj/
+out/
+
+# User-specific files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+logs/
+
+# Test artifacts
+TestResults/
+coverage/
+coverage-report/
+*.coverage
+*.coveragexml
+
+# NuGet
+*.nupkg
+packages/
+
+# Frontend dependencies and builds
+node_modules/
+dist/
+tmp/
+.angular/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# OS files
+Thumbs.db
+.DS_Store

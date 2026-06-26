@@ -1,0 +1,39 @@
+.empty-state {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 28px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  text-align: center;
+}
+
+.empty-state__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--muted-foreground);
+  font-size: 14px;
+}
+
+.empty-state__title,
+.empty-state__message {
+  margin: 0;
+}
+
+.empty-state__title {
+  color: var(--foreground);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.empty-state__message {
+  max-width: 36rem;
+  color: var(--muted-foreground);
+  font-size: 13px;
+}

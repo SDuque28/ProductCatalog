@@ -1,0 +1,33 @@
+.not-found {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  padding: 40px 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
+}
+
+.not-found__label {
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.not-found h1,
+.not-found p {
+  margin: 0;
+}
+
+.not-found h1 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.not-found p {
+  color: var(--muted-foreground);
+  font-size: 14px;
+}

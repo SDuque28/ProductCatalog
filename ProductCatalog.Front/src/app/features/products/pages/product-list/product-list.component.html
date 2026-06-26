@@ -1,0 +1,162 @@
+<section class="product-list">
+  <header class="page-header product-list__hero">
+    <div>
+      <p class="page-eyebrow">Products</p>
+      <h1 class="page-title">Product List</h1>
+      <p class="page-subtitle">Manage and browse your product catalog</p>
+    </div>
+
+    <section class="surface-card product-list__hero-metric" aria-label="Catalog summary">
+      <span class="product-list__hero-label">Catalog summary</span>
+      <strong class="product-list__hero-value mono">
+        {{ facade.totalItems() }}
+      </strong>
+      <span class="product-list__hero-caption">
+        {{ totalItemsSummary() }}
+      </span>
+    </section>
+  </header>
+
+  <section class="surface-card product-list__filters-card">
+    <form class="product-list__filters" [formGroup]="filtersForm" (ngSubmit)="onSearch()">
+      <label class="product-list__field">
+        <span class="product-list__field-label">Search product</span>
+        <input
+          type="text"
+          formControlName="nombre"
+          placeholder="Search product..."
+          aria-label="Search product by name"
+        />
+      </label>
+
+      <div class="product-list__filters-actions">
+        <label class="product-list__checkbox">
+          <input type="checkbox" formControlName="conStock" aria-label="Filter products in stock" />
+          <span>In stock only</span>
+        </label>
+
+        <button class="button-primary product-list__search-button" type="submit">Search</button>
+      </div>
+    </form>
+  </section>
+
+  @if (facade.loading()) {
+    <app-loading-spinner message="Loading products..." />
+  } @else if (facade.error(); as errorMessage) {
+    <section class="surface-card state-card product-list__state-card">
+      <app-error-state title="Something went wrong" [message]="errorMessage" />
+      <button class="button-primary product-list__retry-button" type="button" (click)="onRetry()">
+        Retry
+      </button>
+    </section>
+  } @else if (!facade.hasProducts()) {
+    <app-empty-state
+      title="No products found"
+      message="Try changing the search filters."
+    />
+  } @else {
+    <section class="surface-card product-list__table-card">
+      <header class="product-list__table-header">
+        <div>
+          <h2 class="product-list__section-title">Products</h2>
+          <p class="product-list__section-copy">
+            Review pricing, stock levels, and product details.
+          </p>
+        </div>
+
+        <span class="product-list__table-summary mono">{{ currentRangeSummary() }}</span>
+      </header>
+
+      <div class="product-list__table-wrapper">
+        <table class="product-list__table">
+          <thead>
+            <tr>
+              <th>Product ID</th>
+              <th>Product Name</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (product of facade.products(); track trackByProductId($index, product)) {
+              <tr>
+                <td>
+                  <span class="product-list__id mono">#{{ product.idProducto }}</span>
+                </td>
+                <td>
+                  <div class="product-list__name-group">
+                    <strong class="product-list__name">{{ product.nombreProducto }}</strong>
+                    <span class="product-list__name-meta">Catalog item</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="product-list__numeric mono">
+                    {{ product.valor | currency: 'COP' : 'symbol' : '1.0-0' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="product-list__numeric mono">{{ product.stock }}</span>
+                </td>
+                <td>
+                  <app-status-badge [stock]="product.stock" />
+                </td>
+                <td>
+                  <button
+                    class="button-secondary product-list__detail-button"
+                    type="button"
+                    (click)="viewProductDetail(product)"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <footer class="product-list__pagination">
+        <div class="product-list__pagination-group">
+          <button
+            class="button-secondary"
+            type="button"
+            (click)="onPreviousPage()"
+            [disabled]="!facade.hasPreviousPage()"
+          >
+            Previous
+          </button>
+
+          <div class="product-list__page-numbers" aria-label="Pagination">
+            @for (page of pageNumbers(); track page) {
+              <button
+                class="product-list__page-button"
+                type="button"
+                [class.product-list__page-button--active]="page === facade.currentPage()"
+                [attr.aria-current]="page === facade.currentPage() ? 'page' : null"
+                (click)="onPageSelect(page)"
+              >
+                {{ page }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="product-list__pagination-copy">
+          <span>Page {{ facade.currentPage() }} of {{ facade.totalPages() }}</span>
+          <span>{{ currentRangeSummary() }}</span>
+        </div>
+
+        <button
+          class="button-secondary"
+          type="button"
+          (click)="onNextPage()"
+          [disabled]="!facade.hasNextPage()"
+        >
+          Next
+        </button>
+      </footer>
+    </section>
+  }
+</section>

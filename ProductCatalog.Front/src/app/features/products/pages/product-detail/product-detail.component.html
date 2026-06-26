@@ -1,0 +1,92 @@
+<section class="product-detail">
+  <nav class="product-detail__breadcrumb" aria-label="Breadcrumb">
+    <a routerLink="/">Catalog</a>
+    <span aria-hidden="true">/</span>
+    <a routerLink="/products">Products</a>
+    <span aria-hidden="true">/</span>
+    <span>Details</span>
+  </nav>
+
+  <header class="page-header product-detail__header">
+    <div>
+      <p class="page-eyebrow">Product detail</p>
+      <h1 class="page-title">Product Details</h1>
+      <p class="page-subtitle">
+        Review product information, pricing, and stock availability.
+      </p>
+    </div>
+
+    <a class="button-secondary" routerLink="/products">Back to Products</a>
+  </header>
+
+  @if (facade.loading()) {
+    <app-loading-spinner message="Loading product information..." />
+  } @else if (facade.notFound()) {
+    <section class="surface-card state-card product-detail__state-card">
+      <app-error-state
+        title="Product not found"
+        message="The requested product could not be located."
+      />
+      <a class="button-secondary" routerLink="/products">Back to Products</a>
+    </section>
+  } @else if (facade.error(); as errorMessage) {
+    <section class="surface-card state-card product-detail__state-card">
+      <app-error-state title="Something went wrong" [message]="errorMessage" />
+      <div class="product-detail__actions">
+        <button class="button-primary" type="button" (click)="retry()">Retry</button>
+        <a class="button-secondary" routerLink="/products">Back to Products</a>
+      </div>
+    </section>
+  } @else if (facade.product(); as product) {
+    <section class="product-detail__layout">
+      <aside class="surface-card product-detail__visual-card" aria-label="Product placeholder">
+        <div class="product-detail__visual">
+          <span class="product-detail__visual-id mono">#{{ product.idProducto }}</span>
+          <strong class="product-detail__visual-title">{{ product.nombreProducto }}</strong>
+          <p class="product-detail__visual-copy">Inventory reference</p>
+        </div>
+      </aside>
+
+      <article class="surface-card product-detail__card">
+        <div class="product-detail__card-header">
+          <div class="product-detail__title-block">
+            <h2>{{ product.nombreProducto }}</h2>
+            <p>{{ product.descripcion || 'No description provided.' }}</p>
+          </div>
+
+          <app-status-badge [stock]="product.stock" />
+        </div>
+
+        <dl class="product-detail__grid">
+          <div class="product-detail__row">
+            <dt>Product ID</dt>
+            <dd class="mono">#{{ product.idProducto }}</dd>
+          </div>
+
+          <div class="product-detail__row">
+            <dt>Price</dt>
+            <dd class="mono">{{ product.valor | currency: 'COP' : 'symbol' : '1.0-0' }}</dd>
+          </div>
+
+          <div class="product-detail__row">
+            <dt>Stock</dt>
+            <dd class="mono">{{ product.stock }} units</dd>
+          </div>
+        </dl>
+
+        <section class="product-detail__inventory-panel" aria-label="Stock level">
+          <div class="product-detail__inventory-copy">
+            <span class="product-detail__inventory-label">Stock level</span>
+            <span class="mono">{{ product.stock }} units available</span>
+          </div>
+          <div class="product-detail__stock-track" aria-hidden="true">
+            <span
+              class="product-detail__stock-fill"
+              [style.width.%]="getStockProgress(product.stock)"
+            ></span>
+          </div>
+        </section>
+      </article>
+    </section>
+  }
+</section>

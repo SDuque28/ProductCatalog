@@ -1,0 +1,10 @@
+.loading {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1.25rem;
+  border-radius: 999px;
+  background-color: rgba(37, 99, 235, 0.08);
+  color: var(--primary);
+  font-weight: 600;
+}

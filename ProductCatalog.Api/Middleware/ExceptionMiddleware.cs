@@ -99,6 +99,7 @@ public class ExceptionMiddleware
         return exception switch
         {
             BadRequestException => StatusCodes.Status400BadRequest,
+            ConflictException => StatusCodes.Status409Conflict,
             NotFoundException => StatusCodes.Status404NotFound,
             UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
             _ => StatusCodes.Status500InternalServerError

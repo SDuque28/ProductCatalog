@@ -65,8 +65,10 @@ builder.Services
     });
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<IProductRepository, TxtProductRepository>();
+builder.Services.AddScoped<IUserRepository, TxtUserRepository>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddSingleton<IPasswordHasher, Sha256PasswordHasher>();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(FrontendCorsPolicy, policy =>
@@ -78,6 +80,12 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var authService = scope.ServiceProvider.GetRequiredService<IAuthService>();
+    await authService.EnsureInitializedAsync();
+}
 
 if (app.Environment.IsDevelopment())
 {

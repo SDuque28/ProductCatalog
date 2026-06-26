@@ -15,6 +15,7 @@ The solution was organized with a layered architecture and clean separation of r
 - Server-side pagination
 - Low-stock endpoint
 - JWT authentication for protected backend endpoints
+- User registration with TXT-based persistence
 - Global exception handling
 - TXT-based product data source
 - Malformed TXT row handling
@@ -112,7 +113,8 @@ ProductCatalog/
 
 | Method | Endpoint | Description |
 |---------|----------|-------------|
-| `POST` | `/api/auth/login` | Authenticate the demo user and obtain a JWT token |
+| `POST` | `/api/auth/register` | Register a new user in the TXT-based user store |
+| `POST` | `/api/auth/login` | Authenticate a registered user and obtain a JWT token |
 | `GET` | `/api/products` | Retrieve a paginated product list with optional filters |
 | `GET` | `/api/products/{id}` | Retrieve a single product by identifier |
 | `GET` | `/api/products/low-stock` | Retrieve products with stock less than or equal to a threshold |
@@ -127,7 +129,30 @@ Protected endpoints:
 
 Public endpoint:
 
+- `POST /api/auth/register`
 - `POST /api/auth/login`
+
+Registration request example:
+
+```json
+{
+  "username": "pablo",
+  "email": "pablo@example.com",
+  "password": "Password123*",
+  "confirmPassword": "Password123*"
+}
+```
+
+Successful registration response example:
+
+```json
+{
+  "username": "pablo",
+  "email": "pablo@example.com",
+  "createdAtUtc": "2026-01-01T12:00:00Z",
+  "message": "User registered successfully."
+}
+```
 
 Login request example:
 
@@ -151,7 +176,10 @@ Successful login response example:
 Demo credentials:
 
 - Username: `admin`
+- Email: `admin@example.com`
 - Password: `Admin123*`
+
+The technical assessment seeds the demo admin user into `ProductCatalog.Api/Data/users.txt` when the file is missing or empty so the existing login flow keeps working.
 
 To call protected endpoints, include the JWT in the `Authorization` header:
 
@@ -263,6 +291,27 @@ Malformed record handling in the TXT repository:
 - Duplicate `IdProducto` values keep the first valid row and ignore later duplicates.
 - Repository methods do not throw for malformed rows; exceptions are only expected when the file itself cannot be accessed.
 
+## User Data Source
+
+Registered users are stored in `ProductCatalog.Api/Data/users.txt`.
+
+- The file is created automatically on startup or during auth operations if it does not already exist.
+- The file is ignored by Git through `.gitignore`.
+- Passwords are stored as SHA256 hashes, not in plain text.
+- This hashing approach is acceptable for a technical assessment only. In production, stronger password hashing such as BCrypt, PBKDF2, or Argon2 should be used.
+
+`users.txt` format:
+
+```text
+username|email|passwordHash|createdAtUtc
+```
+
+Example:
+
+```text
+admin|admin@example.com|<sha256_hash>|2026-01-01T12:00:00Z
+```
+
 ---
 
 ## Error Handling
@@ -272,15 +321,18 @@ The API uses a global exception middleware to centralize unhandled exception pro
 Current mappings:
 
 - `200 OK`
+- `201 Created`
 - `400 Bad Request`
 - `401 Unauthorized`
 - `403 Forbidden`
+- `409 Conflict`
 - `404 Not Found`
 - `500 Internal Server Error`
 
 Custom exceptions currently implemented:
 
 - `BadRequestException`
+- `ConflictException`
 - `NotFoundException`
 
 In production-style responses, internal exception details are not exposed to the client.
@@ -309,6 +361,14 @@ Swagger UI is available in development at:
 - `http://localhost:5000/swagger`
 
 JWT configuration and the demo user are stored in `ProductCatalog.Api/appsettings.json` for assessment purposes. In production, secrets must be stored securely through environment variables or a secret manager.
+
+Example registration request:
+
+```bash
+curl -X POST https://localhost:7105/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d "{\"username\":\"pablo\",\"email\":\"pablo@example.com\",\"password\":\"Password123*\",\"confirmPassword\":\"Password123*\"}"
+```
 
 Example login request:
 
@@ -397,6 +457,12 @@ npm test -- --watch=false
 - Problem: UI components needed loading, error, and success state management without mixing state orchestration with markup concerns.
 - Decision: Keep API access in core services and manage feature state with product facades.
 - Benefit: Components stay smaller, state transitions are easier to test, and server-driven behavior remains reusable.
+
+### 6. TXT-Based User Registration
+
+- Problem: The assessment required registration and login persistence without introducing a database.
+- Decision: Store users in `Data/users.txt` behind `IUserRepository`, and hash passwords with a reusable SHA256 hasher.
+- Benefit: Authentication stays simple, testable, and aligned with the layered backend structure while keeping real user data out of Git.
 
 ---
 

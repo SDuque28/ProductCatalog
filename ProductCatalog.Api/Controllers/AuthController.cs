@@ -26,9 +26,9 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     [ProducesResponseType(typeof(LoginResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status401Unauthorized)]
-    public ActionResult<LoginResponseDto> Login([FromBody] LoginRequestDto request)
+    public async Task<ActionResult<LoginResponseDto>> LoginAsync([FromBody] LoginRequestDto request)
     {
-        var response = _authService.Login(request);
+        var response = await _authService.LoginAsync(request);
         if (response is null)
         {
             return Unauthorized(new ErrorResponseDto
@@ -40,5 +40,24 @@ public class AuthController : ControllerBase
         }
 
         return Ok(response);
+    }
+
+    /// <summary>
+    /// Registers a user in the TXT-based user store.
+    /// </summary>
+    /// <param name="request">The registration request.</param>
+    /// <response code="201">Returns the registered user information.</response>
+    /// <response code="400">Returned when the request payload is invalid.</response>
+    /// <response code="409">Returned when the username or email already exists.</response>
+    [AllowAnonymous]
+    [HttpPost("register")]
+    [ProducesResponseType(typeof(RegisterResponseDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorResponseDto), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<RegisterResponseDto>> RegisterAsync([FromBody] RegisterRequestDto request)
+    {
+        var response = await _authService.RegisterAsync(request);
+
+        return StatusCode(StatusCodes.Status201Created, response);
     }
 }

@@ -4,5 +4,9 @@ namespace ProductCatalog.Api.Interfaces;
 
 public interface IAuthService
 {
-    LoginResponseDto? Login(LoginRequestDto request);
+    Task EnsureInitializedAsync();
+
+    Task<LoginResponseDto?> LoginAsync(LoginRequestDto request);
+
+    Task<RegisterResponseDto> RegisterAsync(RegisterRequestDto request);
 }

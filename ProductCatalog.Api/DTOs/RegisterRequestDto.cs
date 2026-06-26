@@ -1,11 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ProductCatalog.Api.Options;
+namespace ProductCatalog.Api.DTOs;
 
-public class DemoUserOptions
+public class RegisterRequestDto
 {
-    public const string SectionName = "DemoUser";
-
     [Required]
     public string Username { get; set; } = string.Empty;
 
@@ -14,5 +12,10 @@ public class DemoUserOptions
     public string Email { get; set; } = string.Empty;
 
     [Required]
+    [MinLength(8)]
     public string Password { get; set; } = string.Empty;
+
+    [Required]
+    [Compare(nameof(Password), ErrorMessage = "Password and confirmPassword must match.")]
+    public string ConfirmPassword { get; set; } = string.Empty;
 }

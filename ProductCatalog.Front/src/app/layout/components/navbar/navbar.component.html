@@ -1,13 +1,33 @@
 <header class="navbar">
   <div class="container navbar__content">
-    <a class="navbar__brand" routerLink="/">
+    <a class="navbar__brand" [routerLink]="authService.isAuthenticated() ? '/products' : '/login'">
       <span class="navbar__brand-title">Product Catalog</span>
     </a>
 
     <nav class="navbar__nav" aria-label="Primary navigation">
-      <a class="navbar__link navbar__link--active" routerLink="/products">
-        Products
-      </a>
+      @if (authService.isAuthenticated()) {
+        <a
+          class="navbar__link"
+          routerLink="/products"
+          routerLinkActive="navbar__link--active"
+          [routerLinkActiveOptions]="{ exact: false }"
+        >
+          Products
+        </a>
+
+        <button class="button-ghost navbar__button" type="button" (click)="onLogout()">
+          Logout
+        </button>
+      } @else {
+        <a
+          class="navbar__link"
+          routerLink="/login"
+          routerLinkActive="navbar__link--active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          Sign In
+        </a>
+      }
     </nav>
   </div>
 </header>

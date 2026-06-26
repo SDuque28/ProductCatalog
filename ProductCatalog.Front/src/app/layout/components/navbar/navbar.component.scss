@@ -28,6 +28,7 @@
 .navbar__nav {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
 .navbar__link {
@@ -42,6 +43,10 @@
   color: var(--muted-foreground);
   font-size: 14px;
   font-weight: 500;
+}
+
+.navbar__button {
+  min-height: 36px;
 }
 
 .navbar__link--active {

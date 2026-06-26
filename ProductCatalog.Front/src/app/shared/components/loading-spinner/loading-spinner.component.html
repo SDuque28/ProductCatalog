@@ -1,4 +1,7 @@
 <div class="loading-spinner" role="status" aria-live="polite" aria-label="Loading state">
   <span class="loading-spinner__icon" aria-hidden="true"></span>
-  <p class="loading-spinner__message">{{ message() }}</p>
+  <div class="loading-spinner__copy">
+    <p class="loading-spinner__label">Please wait</p>
+    <p class="loading-spinner__message">{{ message() }}</p>
+  </div>
 </div>

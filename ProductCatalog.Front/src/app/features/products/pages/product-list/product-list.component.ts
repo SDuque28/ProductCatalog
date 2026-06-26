@@ -1,10 +1,11 @@
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, computed, OnInit, inject } from '@angular/core';
 import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 import { ErrorStateComponent } from '../../../../shared/components/error-state/error-state.component';
 import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
+import { StatusBadgeComponent } from '../../components/status-badge/status-badge.component';
 import { Product } from '../../models/product.model';
 import { ProductListFacade } from '../../services/product-list.facade';
 
@@ -17,7 +18,8 @@ import { ProductListFacade } from '../../services/product-list.facade';
     CurrencyPipe,
     LoadingSpinnerComponent,
     ErrorStateComponent,
-    EmptyStateComponent
+    EmptyStateComponent,
+    StatusBadgeComponent
   ],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.scss',
@@ -29,6 +31,29 @@ export class ProductListComponent implements OnInit {
   public readonly filtersForm = new FormGroup({
     nombre: new FormControl('', { nonNullable: true }),
     conStock: new FormControl(false, { nonNullable: true })
+  });
+  public readonly totalItemsSummary = computed(() => {
+    const totalItems = this.facade.totalItems();
+
+    if (totalItems === 0) {
+      return 'Search and review products from the current inventory feed.';
+    }
+
+    return `${totalItems} product${totalItems === 1 ? '' : 's'} available in the catalog.`;
+  });
+  public readonly currentRangeSummary = computed(() => {
+    const totalItems = this.facade.totalItems();
+
+    if (totalItems === 0) {
+      return 'No results to display';
+    }
+
+    const page = this.facade.currentPage();
+    const pageSize = this.facade.pageSize();
+    const startItem = (page - 1) * pageSize + 1;
+    const endItem = Math.min(page * pageSize, totalItems);
+
+    return `Showing ${startItem}-${endItem} of ${totalItems}`;
   });
 
   public ngOnInit(): void {
@@ -47,6 +72,10 @@ export class ProductListComponent implements OnInit {
 
   public onNextPage(): void {
     this.facade.goToNextPage();
+  }
+
+  public onRetry(): void {
+    this.facade.loadProducts();
   }
 
   public viewProductDetail(product: Product): void {

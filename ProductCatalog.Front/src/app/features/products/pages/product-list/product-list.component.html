@@ -1,81 +1,142 @@
 <section class="product-list">
-  <header class="product-list__header">
+  <header class="page-header product-list__hero">
     <div>
-      <p class="product-list__eyebrow">Catalog</p>
-      <h1>Product List</h1>
+      <p class="page-eyebrow">Inventory</p>
+      <h1 class="page-title">Product Catalog</h1>
+      <p class="page-subtitle">{{ totalItemsSummary() }}</p>
     </div>
+
+    <section class="surface-card product-list__hero-metric" aria-label="Catalog summary">
+      <span class="product-list__hero-label">Current page</span>
+      <strong class="product-list__hero-value mono">
+        {{ facade.currentPage() }}/{{ facade.totalPages() }}
+      </strong>
+      <span class="product-list__hero-caption">{{ currentRangeSummary() }}</span>
+    </section>
   </header>
 
-  <form class="product-list__filters" [formGroup]="filtersForm" (ngSubmit)="onSearch()">
-    <label class="product-list__field">
-      <span>Search</span>
-      <input type="text" formControlName="nombre" placeholder="Search product..." />
-    </label>
+  <section class="surface-card product-list__filters-card">
+    <form class="product-list__filters" [formGroup]="filtersForm" (ngSubmit)="onSearch()">
+      <label class="product-list__field">
+        <span class="product-list__field-label">Search product</span>
+        <input
+          type="text"
+          formControlName="nombre"
+          placeholder="Search product..."
+          aria-label="Search product by name"
+        />
+      </label>
 
-    <label class="product-list__checkbox">
-      <input type="checkbox" formControlName="conStock" />
-      <span>Only products in stock</span>
-    </label>
+      <label class="product-list__checkbox">
+        <input type="checkbox" formControlName="conStock" />
+        <span>In stock only</span>
+      </label>
 
-    <button class="product-list__search-button" type="submit">Search</button>
-  </form>
+      <button class="button-primary product-list__search-button" type="submit">Search</button>
+    </form>
+  </section>
 
   @if (facade.loading()) {
     <app-loading-spinner message="Loading products..." />
   } @else if (facade.error(); as errorMessage) {
-    <app-error-state
-      title="Something went wrong"
-      [message]="errorMessage"
-    />
+    <section class="surface-card state-card product-list__state-card">
+      <app-error-state title="Something went wrong" [message]="errorMessage" />
+      <button class="button-primary product-list__retry-button" type="button" (click)="onRetry()">
+        Retry
+      </button>
+    </section>
   } @else if (!facade.hasProducts()) {
     <app-empty-state
       title="No products found"
       message="Try changing the search filters."
     />
   } @else {
-    <div class="product-list__table-wrapper">
-      <table class="product-list__table">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (product of facade.products(); track trackByProductId($index, product)) {
+    <section class="surface-card product-list__table-card">
+      <header class="product-list__table-header">
+        <div>
+          <h2 class="product-list__section-title">Catalog overview</h2>
+          <p class="product-list__section-copy">
+            Review pricing, stock levels, and access product details.
+          </p>
+        </div>
+
+        <span class="product-list__table-summary mono">{{ currentRangeSummary() }}</span>
+      </header>
+
+      <div class="product-list__table-wrapper">
+        <table class="product-list__table">
+          <thead>
             <tr>
-              <td>{{ product.idProducto }}</td>
-              <td>{{ product.nombreProducto }}</td>
-              <td>{{ product.valor | currency: 'COP' : 'symbol' : '1.0-0' }}</td>
-              <td>{{ product.stock }}</td>
-              <td>
-                <button
-                  class="product-list__detail-button"
-                  type="button"
-                  (click)="viewProductDetail(product)"
-                >
-                  View Detail
-                </button>
-              </td>
+              <th>Product ID</th>
+              <th>Product Name</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            @for (product of facade.products(); track trackByProductId($index, product)) {
+              <tr>
+                <td>
+                  <span class="product-list__id mono">#{{ product.idProducto }}</span>
+                </td>
+                <td>
+                  <div class="product-list__name-group">
+                    <strong class="product-list__name">{{ product.nombreProducto }}</strong>
+                    <span class="product-list__name-meta">Catalog item</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="product-list__numeric mono">
+                    {{ product.valor | currency: 'COP' : 'symbol' : '1.0-0' }}
+                  </span>
+                </td>
+                <td>
+                  <span class="product-list__numeric mono">{{ product.stock }}</span>
+                </td>
+                <td>
+                  <app-status-badge [stock]="product.stock" />
+                </td>
+                <td>
+                  <button
+                    class="button-secondary"
+                    type="button"
+                    (click)="viewProductDetail(product)"
+                  >
+                    View Details
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
 
-    <footer class="product-list__pagination">
-      <button type="button" (click)="onPreviousPage()" [disabled]="!facade.hasPreviousPage()">
-        Previous
-      </button>
+      <footer class="product-list__pagination">
+        <button
+          class="button-secondary"
+          type="button"
+          (click)="onPreviousPage()"
+          [disabled]="!facade.hasPreviousPage()"
+        >
+          Previous
+        </button>
 
-      <span>Page {{ facade.currentPage() }} of {{ facade.totalPages() }}</span>
+        <div class="product-list__pagination-copy">
+          <span>Page {{ facade.currentPage() }} of {{ facade.totalPages() }}</span>
+          <span>{{ currentRangeSummary() }}</span>
+        </div>
 
-      <button type="button" (click)="onNextPage()" [disabled]="!facade.hasNextPage()">
-        Next
-      </button>
-    </footer>
+        <button
+          class="button-secondary"
+          type="button"
+          (click)="onNextPage()"
+          [disabled]="!facade.hasNextPage()"
+        >
+          Next
+        </button>
+      </footer>
+    </section>
   }
 </section>

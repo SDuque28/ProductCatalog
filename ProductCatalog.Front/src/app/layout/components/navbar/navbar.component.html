@@ -1,8 +1,17 @@
 <header class="navbar">
   <div class="container navbar__content">
-    <a class="navbar__brand" routerLink="/products">Product Catalog</a>
+    <a class="navbar__brand" routerLink="/">
+      <span class="navbar__brand-mark" aria-hidden="true">PC</span>
+      <span class="navbar__brand-copy">
+        <span class="navbar__brand-title">Product Catalog</span>
+        <span class="navbar__brand-subtitle">Enterprise inventory dashboard</span>
+      </span>
+    </a>
 
     <nav class="navbar__nav" aria-label="Primary navigation">
+      <a class="navbar__link" routerLink="/" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="navbar__link--active">
+        Overview
+      </a>
       <a class="navbar__link" routerLink="/products" routerLinkActive="navbar__link--active">
         Products
       </a>

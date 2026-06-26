@@ -1,12 +1,25 @@
 .empty-state {
   display: grid;
-  gap: 0.75rem;
-  padding: 2rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  background-color: var(--surface-color);
-  box-shadow: 0 1.25rem 2.5rem var(--shadow-color);
+  justify-items: center;
+  gap: 12px;
+  padding: 40px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
   text-align: center;
+}
+
+.empty-state__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--muted-foreground);
+  font-size: 18px;
 }
 
 .empty-state__title,
@@ -15,9 +28,13 @@
 }
 
 .empty-state__title {
-  color: var(--text-color);
+  color: var(--foreground);
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .empty-state__message {
-  color: var(--muted-text-color);
+  max-width: 36rem;
+  color: var(--muted-foreground);
+  font-size: 14px;
 }

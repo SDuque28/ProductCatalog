@@ -1,11 +1,22 @@
 .error-state {
   display: grid;
-  gap: 0.75rem;
-  padding: 2rem;
-  border: 1px solid rgba(165, 36, 36, 0.18);
-  border-radius: var(--radius-md);
-  background-color: rgba(165, 36, 36, 0.08);
+  justify-items: center;
+  gap: 12px;
   text-align: center;
+}
+
+.error-state__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--status-out-ring);
+  border-radius: 50%;
+  background: var(--status-out-bg);
+  color: var(--status-out-text);
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .error-state__title,
@@ -14,9 +25,13 @@
 }
 
 .error-state__title {
-  color: #8b1e1e;
+  color: var(--foreground);
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .error-state__message {
-  color: #6b2a2a;
+  max-width: 40rem;
+  color: var(--muted-foreground);
+  font-size: 14px;
 }

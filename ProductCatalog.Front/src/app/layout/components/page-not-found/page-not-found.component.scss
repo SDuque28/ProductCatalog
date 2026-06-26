@@ -1,20 +1,20 @@
 .not-found {
   display: grid;
-  gap: 1rem;
+  gap: 16px;
   justify-items: start;
-  padding: 3rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  background-color: var(--surface-color);
-  box-shadow: 0 1.25rem 2.5rem var(--shadow-color);
+  padding: 40px 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
 }
 
 .not-found__label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--secondary-color);
 }
 
 .not-found h1,
@@ -22,18 +22,12 @@
   margin: 0;
 }
 
-.not-found p {
-  color: var(--muted-text-color);
+.not-found h1 {
+  font-size: 24px;
+  font-weight: 600;
 }
 
-.not-found__button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 2.75rem;
-  padding: 0 1.25rem;
-  border-radius: 999px;
-  background-color: var(--primary-color);
-  color: #fff;
-  font-weight: 600;
+.not-found p {
+  color: var(--muted-foreground);
+  font-size: 14px;
 }

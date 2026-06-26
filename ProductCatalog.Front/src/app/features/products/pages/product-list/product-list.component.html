@@ -1,17 +1,19 @@
 <section class="product-list">
   <header class="page-header product-list__hero">
     <div>
-      <p class="page-eyebrow">Inventory</p>
-      <h1 class="page-title">Product Catalog</h1>
-      <p class="page-subtitle">{{ totalItemsSummary() }}</p>
+      <p class="page-eyebrow">Products</p>
+      <h1 class="page-title">Product List</h1>
+      <p class="page-subtitle">Manage and browse your product catalog</p>
     </div>
 
     <section class="surface-card product-list__hero-metric" aria-label="Catalog summary">
-      <span class="product-list__hero-label">Current page</span>
+      <span class="product-list__hero-label">Catalog summary</span>
       <strong class="product-list__hero-value mono">
-        {{ facade.currentPage() }}/{{ facade.totalPages() }}
+        {{ facade.totalItems() }}
       </strong>
-      <span class="product-list__hero-caption">{{ currentRangeSummary() }}</span>
+      <span class="product-list__hero-caption">
+        {{ totalItemsSummary() }}
+      </span>
     </section>
   </header>
 
@@ -27,12 +29,14 @@
         />
       </label>
 
-      <label class="product-list__checkbox">
-        <input type="checkbox" formControlName="conStock" />
-        <span>In stock only</span>
-      </label>
+      <div class="product-list__filters-actions">
+        <label class="product-list__checkbox">
+          <input type="checkbox" formControlName="conStock" aria-label="Filter products in stock" />
+          <span>In stock only</span>
+        </label>
 
-      <button class="button-primary product-list__search-button" type="submit">Search</button>
+        <button class="button-primary product-list__search-button" type="submit">Search</button>
+      </div>
     </form>
   </section>
 
@@ -100,7 +104,7 @@
                 </td>
                 <td>
                   <button
-                    class="button-secondary"
+                    class="button-primary product-list__detail-button"
                     type="button"
                     (click)="viewProductDetail(product)"
                   >
@@ -114,14 +118,30 @@
       </div>
 
       <footer class="product-list__pagination">
-        <button
-          class="button-secondary"
-          type="button"
-          (click)="onPreviousPage()"
-          [disabled]="!facade.hasPreviousPage()"
-        >
-          Previous
-        </button>
+        <div class="product-list__pagination-group">
+          <button
+            class="button-secondary"
+            type="button"
+            (click)="onPreviousPage()"
+            [disabled]="!facade.hasPreviousPage()"
+          >
+            Previous
+          </button>
+
+          <div class="product-list__page-numbers" aria-label="Pagination">
+            @for (page of pageNumbers(); track page) {
+              <button
+                class="product-list__page-button"
+                type="button"
+                [class.product-list__page-button--active]="page === facade.currentPage()"
+                [attr.aria-current]="page === facade.currentPage() ? 'page' : null"
+                (click)="onPageSelect(page)"
+              >
+                {{ page }}
+              </button>
+            }
+          </div>
+        </div>
 
         <div class="product-list__pagination-copy">
           <span>Page {{ facade.currentPage() }} of {{ facade.totalPages() }}</span>

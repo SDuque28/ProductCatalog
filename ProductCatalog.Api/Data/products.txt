@@ -9,3 +9,25 @@ abc|Producto invalido|Id invalido|50000|3
 7|Producto valor invalido|Valor invalido|abc|2
 8|Producto duplicado|Primer registro valido|99000|1
 8|Producto duplicado 2|Debe ignorarse|120000|2
+9|Laptop ultrabook|Portatil liviano 14 pulgadas|2850000|8
+10|Base refrigerante|Base con ventiladores duales|125000|14
+11|Webcam Full HD|Camara 1080p con microfono|185000|6
+12|Silla ergonomica|Silla de oficina con soporte lumbar|980000|3
+13|Hub USB-C|Adaptador multipuerto aluminio|149000|0
+14|Disco SSD 1TB|Unidad solida NVMe alta velocidad|540000|11
+15|Memoria RAM 16GB|Modulo DDR4 3200MHz|265000|9
+16|Impresora multifuncional|Impresora con escaner WiFi|760000|2
+17|Tablet 10 pulgadas|Tablet Android de uso general|1150000|5
+18|Parlante bluetooth|Parlante portatil resistente al agua|210000|18
+19|Microfono condensador|Microfono USB para streaming|320000|4
+20|Router WiFi 6|Router doble banda alto rendimiento|430000|7
+21|Cable HDMI 2 metros|Cable 4K alta velocidad|45000|24
+22|Mouse pad XL|Superficie extendida antideslizante|69000|13
+23|Fuente de poder 650W|Fuente certificacion 80 Plus Bronze|390000|10
+24|Camara de seguridad|Camara interior con vision nocturna|275000|1
+25|Smartwatch deportivo|Reloj con monitoreo cardiaco|650000|16
+26|Teclado numerico|Teclado auxiliar USB|58000|0
+27|Monitor 27 QHD|Monitor IPS 2560x1440 75Hz|1280000|6
+28|Docking station|Base USB-C para escritorio|470000|12
+29|Lector de codigo de barras|Escaner USB de mano|235000|3
+30|Audifonos in-ear|Audifonos con cancelacion pasiva|99000|15

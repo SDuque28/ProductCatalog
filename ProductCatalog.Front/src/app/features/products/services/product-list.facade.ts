@@ -97,6 +97,15 @@ export class ProductListFacade {
     this.loadProducts();
   }
 
+  public goToPage(page: number): void {
+    if (page < ProductListFacade.defaultPage || page > this.totalPages() || page === this.currentPage()) {
+      return;
+    }
+
+    this.currentPage.set(page);
+    this.loadProducts();
+  }
+
   private getNombreFilter(): string | undefined {
     const nombre = this.searchTerm();
 

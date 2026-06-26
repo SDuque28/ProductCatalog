@@ -14,6 +14,7 @@ The solution was organized with a layered architecture and clean separation of r
 - Stock filtering
 - Server-side pagination
 - Low-stock endpoint
+- JWT authentication for protected backend endpoints
 - Global exception handling
 - TXT-based product data source
 - Malformed TXT row handling
@@ -101,6 +102,7 @@ ProductCatalog/
 - Repository Pattern
 - Service Layer
 - OpenAPI document generation in development
+- Swagger UI with Bearer token support
 - xUnit
 - Moq
 - FluentAssertions
@@ -109,9 +111,52 @@ ProductCatalog/
 
 | Method | Endpoint | Description |
 |---------|----------|-------------|
+| `POST` | `/api/auth/login` | Authenticate the demo user and obtain a JWT token |
 | `GET` | `/api/products` | Retrieve a paginated product list with optional filters |
 | `GET` | `/api/products/{id}` | Retrieve a single product by identifier |
 | `GET` | `/api/products/low-stock` | Retrieve products with stock less than or equal to a threshold |
+
+Authentication implemented: `Yes`
+
+Protected endpoints:
+
+- `GET /api/products`
+- `GET /api/products/{id}`
+- `GET /api/products/low-stock`
+
+Public endpoint:
+
+- `POST /api/auth/login`
+
+Login request example:
+
+```json
+{
+  "username": "admin",
+  "password": "Admin123*"
+}
+```
+
+Successful login response example:
+
+```json
+{
+  "token": "<JWT_TOKEN>",
+  "expiresAt": "2026-01-01T12:00:00Z",
+  "tokenType": "Bearer"
+}
+```
+
+Demo credentials:
+
+- Username: `admin`
+- Password: `Admin123*`
+
+To call protected endpoints, include the JWT in the `Authorization` header:
+
+```http
+Authorization: Bearer <TOKEN>
+```
 
 Supported query parameters for `GET /api/products`:
 
@@ -139,7 +184,6 @@ Not implemented:
 - Product creation
 - Product update
 - Product deletion
-- Authentication and authorization
 - Database persistence
 
 ---
@@ -208,6 +252,7 @@ Current mappings:
 - `200 OK`
 - `400 Bad Request`
 - `401 Unauthorized`
+- `403 Forbidden`
 - `404 Not Found`
 - `500 Internal Server Error`
 
@@ -236,7 +281,27 @@ Default backend URLs:
 - `http://localhost:5000`
 - `https://localhost:7105`
 
-OpenAPI is available in development.
+Swagger UI is available in development at:
+
+- `https://localhost:7105/swagger`
+- `http://localhost:5000/swagger`
+
+JWT configuration and the demo user are stored in `ProductCatalog.Api/appsettings.json` for assessment purposes. In production, secrets must be stored securely through environment variables or a secret manager.
+
+Example login request:
+
+```bash
+curl -X POST https://localhost:7105/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d "{\"username\":\"admin\",\"password\":\"Admin123*\"}"
+```
+
+Example protected request:
+
+```bash
+curl https://localhost:7105/api/products \
+  -H "Authorization: Bearer <TOKEN>"
+```
 
 ### Frontend
 
@@ -315,7 +380,6 @@ npm test -- --watch=false
 
 ## Future Improvements
 
-- JWT authentication and authorization
 - Database persistence with a replaceable repository implementation
 - CRUD endpoints for products
 - Docker support

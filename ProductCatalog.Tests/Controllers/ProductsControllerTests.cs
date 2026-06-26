@@ -1,4 +1,6 @@
 using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Moq;
@@ -31,6 +33,7 @@ public class ProductsControllerTests
         {
             BaseAddress = new Uri("https://localhost")
         });
+        await AuthenticateAsync(client);
 
         // Act
         var response = await client.GetAsync("/api/products/1");
@@ -53,6 +56,7 @@ public class ProductsControllerTests
         {
             BaseAddress = new Uri("https://localhost")
         });
+        await AuthenticateAsync(client);
 
         // Act
         var response = await client.GetAsync("/api/products/999");
@@ -92,11 +96,50 @@ public class ProductsControllerTests
         {
             BaseAddress = new Uri("https://localhost")
         });
+        await AuthenticateAsync(client);
 
         // Act
         var response = await client.GetAsync("/api/products?name=teclado&inStock=true&page=1&pageSize=10");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task GetProductsAsync_WhenRequestIsUnauthenticated_ShouldReturnUnauthorized()
+    {
+        // Arrange
+        var productServiceMock = new Mock<IProductService>();
+
+        await using var factory = new TestProductApiFactory(productServiceMock.Object);
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            BaseAddress = new Uri("https://localhost")
+        });
+
+        // Act
+        var response = await client.GetAsync("/api/products");
+
+        // Assert
+        response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+    }
+
+    private static async Task AuthenticateAsync(HttpClient client)
+    {
+        var response = await client.PostAsJsonAsync("/api/auth/login", new LoginRequestDto
+        {
+            Username = "admin",
+            Password = "Admin123*"
+        });
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var loginResponse = await response.Content.ReadFromJsonAsync<LoginResponseDto>();
+        loginResponse.Should().NotBeNull();
+        loginResponse!.Token.Should().NotBeNullOrWhiteSpace();
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+            loginResponse.TokenType,
+            loginResponse.Token);
     }
 }

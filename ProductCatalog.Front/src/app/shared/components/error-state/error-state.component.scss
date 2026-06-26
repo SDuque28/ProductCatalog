@@ -1,7 +1,7 @@
 .error-state {
   display: grid;
   justify-items: center;
-  gap: 12px;
+  gap: 10px;
   text-align: center;
 }
 
@@ -9,13 +9,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border: 1px solid var(--status-out-ring);
   border-radius: 50%;
   background: var(--status-out-bg);
   color: var(--status-out-text);
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
 }
 
@@ -26,12 +26,12 @@
 
 .error-state__title {
   color: var(--foreground);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
 }
 
 .error-state__message {
   max-width: 40rem;
   color: var(--muted-foreground);
-  font-size: 14px;
+  font-size: 13px;
 }

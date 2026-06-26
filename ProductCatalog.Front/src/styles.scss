@@ -1,18 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
 
 :root {
-  --background: #f8fafc;
+  --background: #f5f7fa;
   --foreground: #1e293b;
   --card: #ffffff;
   --primary: #2563eb;
   --primary-dark: #1d4ed8;
   --border: #e2e8f0;
   --muted-foreground: #64748b;
-  --shadow-sm: 0 8px 24px rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 20px 40px rgba(15, 23, 42, 0.06);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.04);
   --container-width: 1200px;
-  --radius: 12px;
-  --radius-sm: 10px;
+  --radius: 8px;
+  --radius-sm: 6px;
   --font-sans: 'Inter', 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', 'Cascadia Code', monospace;
   --status-available-bg: #ecfdf5;
@@ -40,9 +40,7 @@ body {
 
 body {
   font-family: var(--font-sans);
-  background:
-    radial-gradient(circle at top, rgba(37, 99, 235, 0.08), transparent 28%),
-    linear-gradient(180deg, #ffffff 0%, var(--background) 100%);
+  background: var(--background);
   color: var(--foreground);
   line-height: 1.5;
 }
@@ -72,7 +70,7 @@ select {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--card);
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 
 .button-primary,
@@ -82,29 +80,25 @@ select {
   align-items: center;
   justify-content: center;
   min-height: 40px;
-  padding: 0 16px;
-  border-radius: 10px;
+  padding: 0 14px;
+  border-radius: 6px;
   border: 1px solid transparent;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition:
     border-color 0.2s ease,
     background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    color 0.2s ease;
 }
 
 .button-primary {
   background: var(--primary);
   color: #ffffff;
-  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.18);
 }
 
 .button-primary:hover {
   background: var(--primary-dark);
-  transform: translateY(-1px);
 }
 
 .button-secondary {
@@ -129,8 +123,6 @@ select {
 .button-ghost:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
 }
 
 .mono {
@@ -141,34 +133,32 @@ select {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 24px;
+  gap: 16px;
 }
 
 .page-eyebrow {
-  margin: 0 0 8px;
-  color: var(--primary);
+  margin: 0 0 4px;
+  color: var(--muted-foreground);
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 .page-title {
   margin: 0;
-  font-size: clamp(24px, 2.6vw, 32px);
+  font-size: clamp(22px, 2.2vw, 28px);
   font-weight: 600;
-  line-height: 1.15;
+  line-height: 1.2;
 }
 
 .page-subtitle {
-  margin: 8px 0 0;
+  margin: 6px 0 0;
   max-width: 720px;
   color: var(--muted-foreground);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .state-card {
-  padding: 32px 24px;
+  padding: 24px 20px;
 }
 
 @media (max-width: 767px) {
